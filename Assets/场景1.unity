@@ -314,6 +314,10 @@ MonoBehaviour:
   "\u6253\u5F00evade": 0
   "evade\u6743\u91CD": 0
   "evade\u76EE\u6807": {fileID: 0}
+  "wander\u534A\u5F84": 0.5
+  "wander\u8DDD\u79BB": 1
+  wanderJitter: 0.3
+  "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 1
   "\u6050\u60E7\u8DDD\u79BB": 2
 --- !u!1 &1504519194
 GameObject:
@@ -424,6 +428,10 @@ MonoBehaviour:
   "\u6253\u5F00evade": 1
   "evade\u6743\u91CD": 1
   "evade\u76EE\u6807": {fileID: 1210542552}
+  "wander\u534A\u5F84": 0
+  "wander\u8DDD\u79BB": 0
+  wanderJitter: 0
+  "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6050\u60E7\u8DDD\u79BB": 2
 --- !u!114 &2070461299
 MonoBehaviour:

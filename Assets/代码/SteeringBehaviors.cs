@@ -28,6 +28,16 @@ public class SteeringBehaviors : MonoBehaviour
 	public float evade权重;
 	public Vehicle evade目标;
 
+	//wander
+	//wander圈的半径
+	public float wander半径 = 3 ;
+	//距离智能体的距离
+	public float wander距离;
+	//美妙加到目标的随机位移的最大值
+	public float wanderJitter;
+
+	public bool 绘制wander辅助线 = true;
+
 
 
 	public float 恐惧距离=2f;
@@ -48,15 +58,15 @@ public class SteeringBehaviors : MonoBehaviour
 		{
 			force += Seek( seek目标.position) * seek权重;
 		}
-		if ( 打开pursuit ) 
+		if ( 打开pursuit )
 		{
 			force += Pursuit( pursuit目标) * pursuit权重;
 		}
-		if ( 打开evade ) 
+		if ( 打开evade )
 		{
 			force += Evade( evade目标) * evade权重;
 		}
-			
+
 		return force;
 	}
 
@@ -169,6 +179,93 @@ public class SteeringBehaviors : MonoBehaviour
 
 
 
+/*************************************************************************************************
+
+
+wander
+
+
+*************************************************************************************************/
+
+
+	Vector3 Wander()
+	{
+		//A:首先，加一个小的随机向量到目标位置
+		//wander是一个点，被限制半径为 wander半径 的圈上，
+		Vector3 wanderTarget = Vector3.zero;
+	    wanderTarget += new Vector3( Random.Range(-1f , 1f ) * wanderJitter
+			,Random.Range( - 1f , 1f ) * wanderJitter ,  0 );
+
+		//把这个新的向量重新投影刀单元圆周上
+		wanderTarget = wanderTarget.normalized * wander半径;
+
+		//移动目标到智能体前面 wander距离 的位置
+		Vector3 单位速度 = vehicle.速度.normalized;
+		Vector3 targetLocal = new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 ); 
+
+		//把目标投影到世界空间
+		Vector3 targetWorld = transform.position + targetLocal + wanderTarget;
+
+
+		//移动向他
+		return targetWorld - transform.position;
+
+		//return targetWorld;
+
+	}
+
+
+	void OnDrawGizmos()
+	{
+		if(!绘制wander辅助线)
+		{
+			return;
+		}
+
+	    // 设置颜色
+	    Gizmos.color = Color.green;
+	
+
+	    //计算绘制圆圈的中心偏移量
+	    //移动距离
+		Vector3 单位速度 = vehicle.速度.normalized;
+		Vector3 offset= new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 ); 
+
+	    //Vector3 offset = new Vector3(wanderParameter.Distance * forward.y,
+	    //    wanderParameter.Distance * forward.x,0);
+
+
+	    // 绘制圆环
+	    Vector3 beginPoint =   transform.position;
+	    Vector3 firstPoint =   transform.position;
+
+	    //转一圈
+	    float m_Theta = 0.1f;
+	    for (float theta = 0; theta < 2 * Mathf.PI; theta += m_Theta)
+	    {
+	    	//计算
+	        float x = wander半径 * Mathf.Cos(theta);
+	        float y = wander半径 * Mathf.Sin(theta);
+
+	        Vector3 endPoint = transform.position +offset + new Vector3(x , y, 0);
+	        if (theta == 0)
+	        {
+	                firstPoint = endPoint;
+	        }
+	        else
+	        {
+	                Gizmos.DrawLine(beginPoint, endPoint);
+	        }
+	        beginPoint = endPoint;
+	    }
+	    // 绘制最后一条线段
+	    Gizmos.DrawLine(firstPoint, beginPoint);
+
+	    //再话一条直线
+		Vector3 wanderForce=Wander();
+		Gizmos.DrawCube ( transform.position  + wanderForce , new Vector3(0.3f,0.3f,0.3f)  );
+		Gizmos.DrawLine(transform.position, transform.position + new Vector3(wanderForce.x,wanderForce.y,0));
+	}
 
 
 
