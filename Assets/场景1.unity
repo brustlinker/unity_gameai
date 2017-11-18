@@ -308,16 +308,19 @@ MonoBehaviour:
   "\u6253\u5F00seek": 0
   "seek\u6743\u91CD": 0
   "seek\u76EE\u6807": {fileID: 0}
-  "\u6253\u5F00pursuit": 1
+  "\u6253\u5F00pursuit": 0
   "pursuit\u6743\u91CD": 1
   "pursuit\u76EE\u6807": {fileID: 2070461299}
   "\u6253\u5F00evade": 0
   "evade\u6743\u91CD": 0
   "evade\u76EE\u6807": {fileID: 0}
-  "wander\u534A\u5F84": 0.5
+  "wander\u534A\u5F84": 4
   "wander\u8DDD\u79BB": 1
   wanderJitter: 0.3
-  "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 1
+  "\u6253\u5F00wander": 1
+  "wander\u6743\u91CD": 1
+  "wander\u76EE\u6807": {fileID: 0}
+  "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6050\u60E7\u8DDD\u79BB": 2
 --- !u!1 &1504519194
 GameObject:
@@ -431,6 +434,9 @@ MonoBehaviour:
   "wander\u534A\u5F84": 0
   "wander\u8DDD\u79BB": 0
   wanderJitter: 0
+  "\u6253\u5F00wander": 0
+  "wander\u6743\u91CD": 0
+  "wander\u76EE\u6807": {fileID: 0}
   "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6050\u60E7\u8DDD\u79BB": 2
 --- !u!114 &2070461299

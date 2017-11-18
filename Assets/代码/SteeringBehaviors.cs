@@ -36,6 +36,11 @@ public class SteeringBehaviors : MonoBehaviour
 	//美妙加到目标的随机位移的最大值
 	public float wanderJitter;
 
+	public bool 打开wander;
+	public float wander权重;
+	public Vehicle wander目标;
+
+	private Vector3 wanderForce;
 	public bool 绘制wander辅助线 = true;
 
 
@@ -48,6 +53,7 @@ public class SteeringBehaviors : MonoBehaviour
 	void Start()
     {
 		vehicle = this.GetComponent<Vehicle>();
+		InvokeRepeating("更新wanderForce" , 0 , 0.5f );
     }
 
 	public Vector3 计算合力()
@@ -65,6 +71,10 @@ public class SteeringBehaviors : MonoBehaviour
 		if ( 打开evade )
 		{
 			force += Evade( evade目标) * evade权重;
+		}
+		if ( 打开wander )
+		{
+			force += Wander( ) * wander权重;
 		}
 
 		return force;
@@ -186,9 +196,15 @@ wander
 
 
 *************************************************************************************************/
+	Vector3	Wander()
+	{
+
+		return wanderForce;
+	}
 
 
-	Vector3 Wander()
+
+	void 更新wanderForce()
 	{
 		//A:首先，加一个小的随机向量到目标位置
 		//wander是一个点，被限制半径为 wander半径 的圈上，
@@ -201,18 +217,28 @@ wander
 
 		//移动目标到智能体前面 wander距离 的位置
 		Vector3 单位速度 = vehicle.速度.normalized;
-		Vector3 targetLocal = new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 ); 
+		Vector3 targetLocal = new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 );
 
 		//把目标投影到世界空间
 		Vector3 targetWorld = transform.position + targetLocal + wanderTarget;
 
 
 		//移动向他
-		return targetWorld - transform.position;
+		wanderForce =  targetWorld - transform.position;
 
-		//return targetWorld;
 
 	}
+
+
+
+/*************************************************************************************************
+
+
+Gizmos 层
+
+
+*************************************************************************************************/
+
 
 
 	void OnDrawGizmos()
@@ -224,12 +250,12 @@ wander
 
 	    // 设置颜色
 	    Gizmos.color = Color.green;
-	
+
 
 	    //计算绘制圆圈的中心偏移量
 	    //移动距离
 		Vector3 单位速度 = vehicle.速度.normalized;
-		Vector3 offset= new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 ); 
+		Vector3 offset= new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 );
 
 	    //Vector3 offset = new Vector3(wanderParameter.Distance * forward.y,
 	    //    wanderParameter.Distance * forward.x,0);
