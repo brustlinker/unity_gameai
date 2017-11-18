@@ -21,7 +21,7 @@ public class SteeringBehaviors : MonoBehaviour
 	public Vector3 计算合力()
 	{
 		
-		return  Seek( 目标.position );
+		return  Flee( 目标.position );
 	}
 
 
@@ -32,4 +32,12 @@ public class SteeringBehaviors : MonoBehaviour
 		Vector3 预期速度 = Vector3.Normalize( 目标位置 - transform.position ) * vehicle.最大速度;
 		return 预期速度 - vehicle.速度;
 	}
+
+
+	Vector2 Flee(Vector3 目标位置)
+	{
+		Vector3 预期速度 = Vector3.Normalize(  transform.position - 目标位置  ) * vehicle.最大速度;
+		return 预期速度 - vehicle.速度;
+	}
+
 }

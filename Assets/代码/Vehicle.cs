@@ -24,7 +24,7 @@ public class Vehicle : MovingEntity {
 		Vector3 合力  = steering.计算合力();
 
 		合力  = 交警调力 ( 合力 );
-		
+
 		Vector3 加速度 = 合力 / _质量;
 
 		速度 += 加速度 * Time.deltaTime;
@@ -38,6 +38,8 @@ public class Vehicle : MovingEntity {
 
 
 		更新朝向();
+
+		WrapAround( );
 	}
 
 	private Vector3 交警调力(Vector3 力)
@@ -66,7 +68,7 @@ public class Vehicle : MovingEntity {
 		}
 	}
 
-	private void 更新朝向()
+	void 更新朝向()
 	{
 		//计算出夹角(如果利用Atan只能处理1、4象限,而且不用处理除0错误)
 		float radians = Mathf.Atan2( _速度.y , _速度.x );
@@ -76,6 +78,35 @@ public class Vehicle : MovingEntity {
 		//旋转
 		this.transform.rotation=Quaternion.Euler(0,0,degrees);
 	}
+
+
+	//treat the screen as a toroid
+    void WrapAround( )
+    {
+        Vector2 cameraSize = 摄像机.Instance.GetCameraSizeInUnit();
+        //Rect screen=new Rect(Screen.width);
+        Vector2 nowPos = new Vector2(transform.position.x,transform.position.y);
+        if (nowPos.y > cameraSize.y / 2)
+        {
+            transform.position = new Vector3(nowPos.x, nowPos.y - cameraSize.y, 0);
+        }
+        else if(nowPos.y < - cameraSize.y / 2)
+        {
+            transform.position = new Vector3(nowPos.x, nowPos.y + cameraSize.y, 0);
+        }
+
+        if (nowPos.x > cameraSize.x / 2)
+        {
+            transform.position = new Vector3(nowPos.x-cameraSize.x, nowPos.y, 0);
+
+        }
+        else if(nowPos.x < -cameraSize.x / 2)
+        {
+            transform.position = new Vector3(nowPos.x+cameraSize.x, nowPos.y, 0);
+
+        };
+
+    }
 
 
 
