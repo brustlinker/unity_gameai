@@ -6,11 +6,15 @@ public class Vehicle : MovingEntity {
 
 	//private 世界 世界;
 
+	//内部属性
 	SteeringBehaviors steering;
+
+	//可配置属性
+	public Vector3 初始速度;
 
 	void Start()
 	{
-		速度    = new Vector3( 2 , 0 , 0 );
+		速度    = 初始速度;
 		质量    = 1;
 		最大速度 = 3;
 		最大力   = 5;
