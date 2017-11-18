@@ -10,7 +10,7 @@ public class Vehicle : MovingEntity {
 
 	void Start()
 	{
-		速度    = Vector3.zero;
+		速度    = new Vector3( 2 , 0 , 0 );
 		质量    = 1;
 		最大速度 = 3;
 		最大力   = 5;
