@@ -23,6 +23,11 @@ public class SteeringBehaviors : MonoBehaviour
 	public float pursuit权重;
 	public Vehicle pursuit目标;
 
+	//evade
+	public bool 打开evade;
+	public float evade权重;
+	public Vehicle evade目标;
+
 
 
 	public float 恐惧距离=2f;
@@ -46,6 +51,10 @@ public class SteeringBehaviors : MonoBehaviour
 		if ( 打开pursuit ) 
 		{
 			force += Pursuit( pursuit目标) * pursuit权重;
+		}
+		if ( 打开evade ) 
+		{
+			force += Evade( evade目标) * evade权重;
 		}
 			
 		return force;
@@ -146,6 +155,17 @@ public class SteeringBehaviors : MonoBehaviour
 		return Seek ( 逃避者.transform.position + 逃避者.速度 * 预测时间 );
 	}
 
+
+	Vector3 Evade( Vehicle 追逐者 )
+	{
+		Vector3 相差向量 = 追逐者.transform.position - transform.position;
+
+		//预测逃避着的位置
+		//预测的时间正比于逃避着和追逐着的距离；反比于智能体的速度和
+		float 预测时间 = 相差向量.magnitude / ( vehicle.速度.magnitude + 追逐者.速度.magnitude );
+
+		return Flee ( 追逐者.transform.position + 追逐者.速度 * 预测时间 );
+	}
 
 
 
