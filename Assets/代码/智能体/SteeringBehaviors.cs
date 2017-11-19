@@ -45,8 +45,14 @@ public class SteeringBehaviors : MonoBehaviour
 
 
 	//obstacle avoidance
-	public float 最小检测盒长度 = 0.1f;
+	public float 最小检测盒长度 = 1f;
     private float 最大float   = 100000f;
+
+
+	public bool 打开obstacleAvoid;
+	public float obstacleAvoid权重;
+
+
 
 
 	public float 恐惧距离=2f;
@@ -79,6 +85,10 @@ public class SteeringBehaviors : MonoBehaviour
 		if ( 打开wander )
 		{
 			force += Wander( ) * wander权重;
+		}
+		if ( 打开obstacleAvoid )
+		{
+			force += ObstacleAvoidance( ) * obstacleAvoid权重;
 		}
 
 		return force;
@@ -306,6 +316,9 @@ wander
 
 	Vector3 ObstacleAvoidance()
 	{
+
+
+		Debug.Log(最小检测盒长度);
 		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
 
 		//标记在范围内的所有障碍物
@@ -319,12 +332,12 @@ wander
 
 
 		//记录 相交最近障碍物 被转化为局部坐标
-		Vector3 相交最近障碍物_局部坐标;
+		Vector3 相交最近障碍物_局部坐标  = new Vector3( 最大float , 最大float , 0 ) ;
 		foreach(障碍物 障碍物 in 标记障碍物_list)
 		{
-
+			Debug.Log("111");
 			//计算这个障碍物在局部发空间的位置
-			Vector3 LocalPos  ;
+			Vector3 LocalPos = PointToLocalSpace( 障碍物.中心点 , vehicle.速度 , transform.position );
 
 			//局部坐标小雨0
 			if(LocalPos.x < 0)
@@ -370,7 +383,7 @@ wander
 
 
 		//计算操控力
-		Vector3 操控力;
+		Vector3 操控力= Vector3.zero;
 
 		if( 相交最近障碍物 != null )
 		{
@@ -391,12 +404,13 @@ wander
 		//把操控向量从局部空间转化到世界空间
 
 
-		return ;
+		return VectorToWorldSpace( 操控力 , vehicle.速度 , transform.position );
 
 	}
 
 	List<障碍物> 标记障碍物( float 检测盒子长度 )
 	{
+		Debug.Log(检测盒子长度);
 		List<障碍物> 标记障碍物_list = new List<障碍物>();
 
 		foreach(障碍物 障碍物 in 环境.实例.障碍物_list)
@@ -411,8 +425,46 @@ wander
 	}
 
 
+	Vector3 PointToLocalSpace( Vector3 中心点 ,Vector3 向量b , Vector3 向量b起点 )
+	{
+		//向量在另一个向量上的投影
+
+		Vector3 向量a = 中心点 - 向量b起点;
+
+		float x = Vector3.Dot( 向量a , 向量b ) / 向量b.magnitude;
+
+		//向量在法向量上的投影
+		Vector3 向量b的法向量 = new Vector3( -向量b.y , 向量b.x , 0);
+		float y = Vector3.Dot( 向量a , 向量b的法向量 ) / 向量b的法向量.magnitude;
+
+		return new Vector3( x , y , 0 );
+	}
 
 
+	/// <summary>
+	/// 没有考虑除0错误
+	/// </summary>
+	/// <returns>The to world space.</returns>
+	/// <param name="相对向量">相对向量.</param>
+	/// <param name="坐标向量">坐标向量.</param>
+	/// <param name="坐标向量起点">坐标向量起点.</param>
+	Vector3  VectorToWorldSpace( Vector3 相对向量 ,Vector3 坐标向量, Vector3 坐标向量起点 )
+	{
+
+		//计算两个角的和
+		//计算相对向量的角
+		//
+		float 相对向量的角 = Mathf.Atan2(相对向量.y,相对向量.x);
+		//计算坐标向量的角
+		float 坐标向量的角 = Mathf.Atan2(坐标向量.y,坐标向量.x);
+		//计算两个角的和
+		float 和 = 相对向量的角 + 坐标向量的角;
+
+		float x = 相对向量.magnitude* Mathf.Cos( 和 );
+		float y = 相对向量.magnitude* Mathf.Sin( 和 );
+
+		return new Vector3(x,y,0);
+	}
 
 
 

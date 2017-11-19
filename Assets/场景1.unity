@@ -317,10 +317,13 @@ MonoBehaviour:
   "wander\u534A\u5F84": 4
   "wander\u8DDD\u79BB": 1
   wanderJitter: 0.3
-  "\u6253\u5F00wander": 1
+  "\u6253\u5F00wander": 0
   "wander\u6743\u91CD": 1
   "wander\u76EE\u6807": {fileID: 0}
   "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
+  "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 2
+  "\u6253\u5F00obstacleAvoid": 1
+  "obstacleAvoid\u6743\u91CD": 1
   "\u6050\u60E7\u8DDD\u79BB": 2
 --- !u!1 &1443401316
 GameObject:
@@ -478,6 +481,9 @@ MonoBehaviour:
   "wander\u6743\u91CD": 0
   "wander\u76EE\u6807": {fileID: 0}
   "\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
+  "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 0.1
+  "\u6253\u5F00obstacleAvoid": 0
+  "obstacleAvoid\u6743\u91CD": 0
   "\u6050\u60E7\u8DDD\u79BB": 2
 --- !u!114 &2070461299
 MonoBehaviour:
