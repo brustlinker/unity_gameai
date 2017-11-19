@@ -304,12 +304,12 @@ wander
 *************************************************************************************************/
 
 
-	Vector3 ObstacleAvoidance(List<障碍物> 障碍物_list)
+	Vector3 ObstacleAvoidance()
 	{
 		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
 
 		//标记在范围内的所有障碍物
-		//vehicle->world()->TagObstaclesWithinViewRange( vehicle , 检测盒长度 );
+		List<障碍物> 标记障碍物_list = 标记障碍物(  检测盒长度 );
 
 		//跟踪最近的想叫障碍物
 		障碍物 相交最近障碍物 = null;
@@ -320,13 +320,8 @@ wander
 
 		//记录 相交最近障碍物 被转化为局部坐标
 		Vector3 相交最近障碍物_局部坐标;
-		foreach(障碍物 障碍物 in 障碍物_list)
+		foreach(障碍物 障碍物 in 标记障碍物_list)
 		{
-			//如果该障碍物被标记在范围内
-		    if( !障碍物->被标记了() )
-			{
-				continue;
-			}
 
 			//计算这个障碍物在局部发空间的位置
 			Vector3 LocalPos  ;
@@ -338,10 +333,10 @@ wander
 			}
 
 
-			double 障碍物扩展半径 =  障碍物.半径 + vehicle.宽度;
+			float 障碍物扩展半径 =  障碍物.半径 + vehicle.宽度();
 
 			//不相交
-			if( Mathf.abs( LocalPos.y ) >= 障碍物扩展半径 )
+			if( Mathf.Abs( LocalPos.y ) >= 障碍物扩展半径 )
 			{
 				continue;
 			}
@@ -349,24 +344,24 @@ wander
 			//圆周的中心是（cx，cy）
 			//交点的公式是 x = cx +/- sqrt( r * r - cy * cy )
 			//我们要看的是最近的值，所以，我们试试那个是最近的值
-			double cx = LocalPos.x;
-			double cy = LocalPos.y;
+			float cx = LocalPos.x;
+			float cy = LocalPos.y;
 
 
 			//我们只需要一次计算上面等式的开发
-			double 开方部分 = Mathf.sqrt( 障碍物扩展半径*障碍物扩展半径 - cy*cy );
+			float 开方部分 = Mathf.Sqrt( 障碍物扩展半径*障碍物扩展半径 - cy*cy );
 
 			double 交点 = cx - 开方部分 ;
 			if( 交点 <= 0)
 			{
-				焦点 = cx + 开放部分;
+				交点 = cx + 开方部分;
 			}
 
 			//比较是否为目前为止的最近
 			//如果是，记录这个障碍物和它的局部坐标
-			if( ip < 到相交最近的障碍物的距离 )
+			if( 交点 < 到相交最近的障碍物的距离 )
 			{
-				到相交最近的障碍物的距离 = ip;
+				到相交最近的障碍物的距离 = 交点;
 				相交最近障碍物 = 障碍物;
 				相交最近障碍物_局部坐标 = LocalPos;
 			}
@@ -377,26 +372,44 @@ wander
 		//计算操控力
 		Vector3 操控力;
 
-		if( 相交最近障碍物 )
+		if( 相交最近障碍物 != null )
 		{
 			//智能体离物体越近，操控里就越强
-			double multiplier = 1.0 + ( 检测盒长度 - 相交最近障碍物_局部坐标.x ) / 检测盒长度;
+			float multiplier = 1.0f + ( 检测盒长度 - 相交最近障碍物_局部坐标.x ) / 检测盒长度;
 
 			//侧向力
 			操控力.y = ( 相交最近障碍物.半径 - 相交最近障碍物_局部坐标.y ) * multiplier;
 
 
 			//制动力,正比喻障碍物到交通工具的距离
-			const float BrakingWeight = 0.2;
+			const float BrakingWeight = 0.2f;
 
 			操控力.x = ( 检测盒长度 - 相交最近障碍物_局部坐标.x ) * BrakingWeight;
 
 		}//if 相交最近障碍物
 
 		//把操控向量从局部空间转化到世界空间
+
+
 		return ;
 
 	}
+
+	List<障碍物> 标记障碍物( float 检测盒子长度 )
+	{
+		List<障碍物> 标记障碍物_list = new List<障碍物>();
+
+		foreach(障碍物 障碍物 in 环境.实例.障碍物_list)
+		{
+			if ( Vector3.Distance( 障碍物.中心点 , transform.position) < 检测盒子长度 )
+			{
+				标记障碍物_list.Add( 障碍物 );
+			}
+		}
+
+		return 标记障碍物_list;
+	}
+
 
 
 

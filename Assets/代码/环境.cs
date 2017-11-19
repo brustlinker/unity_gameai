@@ -1,15 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
-
-#if UNITY_EDITOR
-
-using Sirenix.Utilities.Editor;
-
-
-#endif
 
 public class 障碍物
 {
@@ -20,36 +12,80 @@ public class 障碍物
 
 public class 环境 : MonoBehaviour {
 
-	[ListDrawerSettings(HideAddButton = true, OnTitleBarGUI = "DrawAddButton")]
-	public List<障碍物> 障碍物_list;
+	private List<障碍物> _障碍物_list;
+
+	public  List<障碍物> 障碍物_list
+	{
+		get
+		{
+			return _障碍物_list;
+		}
+	}
+
+/*************************************************************************************************
+
+
+单例层
+
+
+*************************************************************************************************/
+
+	private static 环境 _实例;
+
+	public static 环境 实例
+	{
+		get
+		{
+			return _实例;
+		}
+	}
+
+	void Awake () {
+	    _实例 = this;
+	}
+
+
+
+
+
+/*************************************************************************************************
+
+
+逻辑层
+
+
+*************************************************************************************************/
+
+
+
 
 
 	void Start ()
 	{
-		障碍物_list = new List<障碍物>();
+		_障碍物_list = new List<障碍物>();
 
 
 		障碍物 障碍物1 = new 障碍物();
 		障碍物1.中心点 = new Vector3( 2 ,  1 , 1 );
 		障碍物1.半径   = 1;
-		障碍物_list.Add( 障碍物1 );
+		_障碍物_list.Add( 障碍物1 );
 
 		障碍物 障碍物2 = new 障碍物();
 		障碍物2.中心点 = new Vector3( 3 , -1 , 1 );
 		障碍物2.半径   = 0.5f;
-		障碍物_list.Add( 障碍物2 );
+		_障碍物_list.Add( 障碍物2 );
 
 		障碍物 障碍物3 = new 障碍物();
 		障碍物3.中心点 = new Vector3(-3 , -1, 1 );
 		障碍物3.半径   = 1.5f ;
-		障碍物_list.Add( 障碍物3 );
+		_障碍物_list.Add( 障碍物3 );
 
 		障碍物 障碍物4 = new 障碍物();
 		障碍物4.中心点 = new Vector3( -3 , 3 , 1 );
 		障碍物4.半径   = 0.5f ;
-		障碍物_list.Add( 障碍物4 );
+		_障碍物_list.Add( 障碍物4 );
 	}
-		
+
 
 
 	void OnDrawGizmos()
