@@ -288,7 +288,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1210542551}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -7.15, y: -1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2070461298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,7 +481,7 @@ MonoBehaviour:
   "wander\u6743\u91CD": 0
   "wander\u76EE\u6807": {fileID: 0}
   "\u6253\u5F00\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
-  "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 0.1
+  "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 0.01
   "\u6253\u5F00obstacleAvoid": 0
   "obstacleAvoid\u6743\u91CD": 0
   "\u6050\u60E7\u8DDD\u79BB": 2

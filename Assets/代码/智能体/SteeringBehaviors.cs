@@ -308,11 +308,14 @@ wander
 /*************************************************************************************************
 
 
-
+ObstacleAvoidance
 
 
 *************************************************************************************************/
 
+
+
+	private 障碍物 需绘制最近障碍物;
 
 	Vector3 ObstacleAvoidance()
 	{
@@ -383,6 +386,9 @@ wander
 		//计算操控力
 		Vector3 操控力= Vector3.zero;
 
+
+		需绘制最近障碍物 = 相交最近障碍物;
+
 		if( 相交最近障碍物 != null )
 		{
 			//智能体离物体越近，操控里就越强
@@ -422,19 +428,29 @@ wander
 	}
 
 
+
+	/// <summary>
+	/// 这个函数有问题
+	/// </summary>
+	/// <returns>The to local space.</returns>
+	/// <param name="中心点">中心点.</param>
+	/// <param name="向量b">向量b.</param>
+	/// <param name="向量b起点">向量b起点.</param>
 	Vector3 PointToLocalSpace( Vector3 中心点 ,Vector3 向量b , Vector3 向量b起点 )
 	{
 		//向量在另一个向量上的投影
 
 		Vector3 向量a = 中心点 - 向量b起点;
 
-		float x = Vector3.Dot( 向量a , 向量b ) / 向量b.magnitude;
+		float A = Mathf.Atan2( 向量a.y , 向量a.x ); 
+		float B = Mathf.Atan2( 向量b.y , 向量b.x );
 
-		//向量在法向量上的投影
-		Vector3 向量b的法向量 = new Vector3( -向量b.y , 向量b.x , 0);
-		float y = Vector3.Dot( 向量a , 向量b的法向量 ) / 向量b的法向量.magnitude;
+		float 夹角 = A - B;
 
-		return new Vector3( x , y , 0 );
+		float x = 向量a.magnitude * Mathf.Cos( 夹角 );
+		float y = 向量a.magnitude * Mathf.Sin( 夹角 );
+
+	 	return new Vector3( x , y , 0 );
 	}
 
 
@@ -478,10 +494,7 @@ Gizmos 层
 	void OnDrawGizmos()
 	{
 		绘制wander辅助线();
-
-
 		绘制ObstaclAvoid辅助线();
-
 	}
 
 
@@ -509,6 +522,7 @@ Gizmos 层
 
 		//Vector3 offset = new Vector3(wanderParameter.Distance * forward.y,
 		//    wanderParameter.Distance * forward.x,0);
+
 
 
 		// 绘制圆环
@@ -552,11 +566,29 @@ Gizmos 层
 		if( vehicle ==null )
 			return;
 
+
+		//测试转化世界坐标函数
+		//转化世界坐标没有问题
+		Vector3 偏移量 = VectorToWorldSpace( new Vector3(1,2,0) , vehicle.速度 , transform.position );
+		Gizmos.DrawCube ( transform.position  + 偏移量 , new Vector3(0.3f,0.3f,0.3f)  );
+
+
+		//在测试转化为局部坐标(也是正确的)
+		//Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
+
 		//绘制检测盒子
 		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
 		float 速度夹角  = Mathf.Atan2( vehicle.速度.y , vehicle.速度.x  );
 		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 检测盒长度 * Mathf.Cos( 速度夹角 )
 			, 检测盒长度 * Mathf.Sin( 速度夹角 ) , 0 ));
+
+
+		//绘制最近障碍物
+
+		if(需绘制最近障碍物!=null)
+		{
+			
+		}
 
 		//绘制obstacle avoid 力
 		Vector3 obstacleAvoid = ObstacleAvoidance();
