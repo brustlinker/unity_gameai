@@ -41,7 +41,7 @@ public class SteeringBehaviors : MonoBehaviour
 	public Vehicle wander目标;
 
 	private Vector3 wanderForce;
-	public bool 绘制wander辅助线 = true;
+	public bool 打开绘制wander辅助线 = true;
 
 
 	//obstacle avoidance
@@ -318,7 +318,6 @@ wander
 	{
 
 
-		Debug.Log(最小检测盒长度);
 		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
 
 		//标记在范围内的所有障碍物
@@ -335,7 +334,6 @@ wander
 		Vector3 相交最近障碍物_局部坐标  = new Vector3( 最大float , 最大float , 0 ) ;
 		foreach(障碍物 障碍物 in 标记障碍物_list)
 		{
-			Debug.Log("111");
 			//计算这个障碍物在局部发空间的位置
 			Vector3 LocalPos = PointToLocalSpace( 障碍物.中心点 , vehicle.速度 , transform.position );
 
@@ -410,7 +408,6 @@ wander
 
 	List<障碍物> 标记障碍物( float 检测盒子长度 )
 	{
-		Debug.Log(检测盒子长度);
 		List<障碍物> 标记障碍物_list = new List<障碍物>();
 
 		foreach(障碍物 障碍物 in 环境.实例.障碍物_list)
@@ -480,68 +477,93 @@ Gizmos 层
 
 	void OnDrawGizmos()
 	{
-		if(!绘制wander辅助线)
+		绘制wander辅助线();
+
+
+		绘制ObstaclAvoid辅助线();
+
+	}
+
+
+	void 绘制wander辅助线()
+	{
+		if(!打开绘制wander辅助线)
 		{
 			return;
 		}
 
-	    // 设置颜色
-	    Gizmos.color = Color.green;
+		//关闭烦人的警告
+		if( vehicle == null )
+		{
+			return;
+		}
+
+		// 设置颜色
+		Gizmos.color = Color.green;
 
 
-	    //计算绘制圆圈的中心偏移量
-	    //移动距离
+		//计算绘制圆圈的中心偏移量
+		//移动距离
 		Vector3 单位速度 = vehicle.速度.normalized;
 		Vector3 offset= new Vector3 (wander距离 * 单位速度.x, wander距离 * 单位速度.y, 0 );
 
-	    //Vector3 offset = new Vector3(wanderParameter.Distance * forward.y,
-	    //    wanderParameter.Distance * forward.x,0);
+		//Vector3 offset = new Vector3(wanderParameter.Distance * forward.y,
+		//    wanderParameter.Distance * forward.x,0);
 
 
-	    // 绘制圆环
-	    Vector3 beginPoint =   transform.position;
-	    Vector3 firstPoint =   transform.position;
+		// 绘制圆环
+		Vector3 beginPoint =   transform.position;
+		Vector3 firstPoint =   transform.position;
 
-	    //转一圈
-	    float m_Theta = 0.1f;
-	    for (float theta = 0; theta < 2 * Mathf.PI; theta += m_Theta)
-	    {
-	    	//计算
-	        float x = wander半径 * Mathf.Cos(theta);
-	        float y = wander半径 * Mathf.Sin(theta);
+		//转一圈
+		float m_Theta = 0.1f;
+		for (float theta = 0; theta < 2 * Mathf.PI; theta += m_Theta)
+		{
+			//计算
+			float x = wander半径 * Mathf.Cos(theta);
+			float y = wander半径 * Mathf.Sin(theta);
 
-	        Vector3 endPoint = transform.position +offset + new Vector3(x , y, 0);
-	        if (theta == 0)
-	        {
-	                firstPoint = endPoint;
-	        }
-	        else
-	        {
-	                Gizmos.DrawLine(beginPoint, endPoint);
-	        }
-	        beginPoint = endPoint;
-	    }
-	    // 绘制最后一条线段
-	    Gizmos.DrawLine(firstPoint, beginPoint);
+			Vector3 endPoint = transform.position +offset + new Vector3(x , y, 0);
+			if (theta == 0)
+			{
+				firstPoint = endPoint;
+			}
+			else
+			{
+				Gizmos.DrawLine(beginPoint, endPoint);
+			}
+			beginPoint = endPoint;
+		}
+		// 绘制最后一条线段
+		Gizmos.DrawLine(firstPoint, beginPoint);
 
-	    //再话一条直线
+		//再画wander直线
 		Vector3 wanderForce=Wander();
 		Gizmos.DrawCube ( transform.position  + wanderForce , new Vector3(0.3f,0.3f,0.3f)  );
 		Gizmos.DrawLine(transform.position, transform.position + new Vector3(wanderForce.x,wanderForce.y,0));
+
+
+
 	}
 
+	void 绘制ObstaclAvoid辅助线()
+	{
+		//关闭烦人的error警告
+		if( vehicle ==null )
+			return;
 
+		//绘制检测盒子
+		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
+		float 速度夹角  = Mathf.Atan2( vehicle.速度.y , vehicle.速度.x  );
+		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 检测盒长度 * Mathf.Cos( 速度夹角 )
+			, 检测盒长度 * Mathf.Sin( 速度夹角 ) , 0 ));
 
+		//绘制obstacle avoid 力
+		Vector3 obstacleAvoid = ObstacleAvoidance();
+		Gizmos.DrawLine(transform.position, transform.position + new Vector3( obstacleAvoid.x , 0 , 0 ));
+		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 0 , obstacleAvoid.y , 0 ));
 
-
-
-
-
-
-
-
-
-
+	}
 
 
 
