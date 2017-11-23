@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class SteeringBehaviors : MonoBehaviour
 {
@@ -52,6 +53,9 @@ public class SteeringBehaviors : MonoBehaviour
 	public bool 打开obstacleAvoid;
 	public float obstacleAvoid权重;
 
+	public GameObject 交点预设;
+	private GameObject 交点实例;
+
 
 
 
@@ -64,6 +68,9 @@ public class SteeringBehaviors : MonoBehaviour
     {
 		vehicle = this.GetComponent<Vehicle>();
 		InvokeRepeating("更新wanderForce" , 0 , 0.5f );
+
+		交点实例 = Instantiate( 交点预设  , transform.position,Quaternion.identity);
+		交点实例.transform.SetParent( this.transform );
     }
 
 	public Vector3 计算合力()
@@ -365,7 +372,7 @@ ObstacleAvoidance
 			//我们只需要一次计算上面等式的开发
 			float 开方部分 = Mathf.Sqrt( 障碍物扩展半径*障碍物扩展半径 - cy*cy );
 
-			double 交点 = cx - 开方部分 ;
+			float 交点 = cx - 开方部分 ;
 			if( 交点 <= 0)
 			{
 				交点 = cx + 开方部分;
@@ -391,6 +398,8 @@ ObstacleAvoidance
 
 		if( 相交最近障碍物 != null )
 		{
+			交点实例.transform.position = 相交最近障碍物_局部坐标;
+			
 			//智能体离物体越近，操控里就越强
 			float multiplier = 1.0f + ( 检测盒长度 - 相交最近障碍物_局部坐标.x ) / 检测盒长度;
 
@@ -442,7 +451,7 @@ ObstacleAvoidance
 
 		Vector3 向量a = 中心点 - 向量b起点;
 
-		float A = Mathf.Atan2( 向量a.y , 向量a.x ); 
+		float A = Mathf.Atan2( 向量a.y , 向量a.x );
 		float B = Mathf.Atan2( 向量b.y , 向量b.x );
 
 		float 夹角 = A - B;
@@ -478,6 +487,57 @@ ObstacleAvoidance
 
 		return new Vector3(x,y,0);
 	}
+
+
+
+
+	void 绘制ObstaclAvoid辅助线()
+	{
+		//关闭烦人的error警告
+		if( vehicle ==null )
+			return;
+
+
+		//测试转化世界坐标函数
+		//转化世界坐标没有问题
+		Vector3 偏移量 = VectorToWorldSpace( new Vector3( -1 , -2 , 0 ) , vehicle.速度 , transform.position );
+		Gizmos.DrawCube ( transform.position  + 偏移量 , new Vector3(0.3f,0.3f,0.3f)  );
+
+
+		//测试交点，
+		//当点击按钮的时候显示一个图片为交点
+
+		//实例化一个prefab，
+		//获取prefab的相对位置
+		//计算出prefab的绝对位置
+		//设置交点图片的位置
+
+
+		//在测试转化为局部坐标(也是正确的)
+		//Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
+
+		//绘制检测盒子
+		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
+		float 速度夹角  = Mathf.Atan2( vehicle.速度.y , vehicle.速度.x  );
+		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 检测盒长度 * Mathf.Cos( 速度夹角 )
+			, 检测盒长度 * Mathf.Sin( 速度夹角 ) , 0 ));
+
+
+		//绘制最近障碍物
+
+		if(需绘制最近障碍物!=null)
+		{
+
+		}
+
+		//绘制obstacle avoid 力
+		Vector3 obstacleAvoid = ObstacleAvoidance();
+		//偏向力，制动力
+		//Gizmos.DrawLine(transform.position, transform.position + new Vector3( obstacleAvoid.x , 0 , 0 ));
+		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 0 , obstacleAvoid.y , 0 ));
+
+	}
+
 
 
 
@@ -560,42 +620,6 @@ Gizmos 层
 
 	}
 
-	void 绘制ObstaclAvoid辅助线()
-	{
-		//关闭烦人的error警告
-		if( vehicle ==null )
-			return;
-
-
-		//测试转化世界坐标函数
-		//转化世界坐标没有问题
-		Vector3 偏移量 = VectorToWorldSpace( new Vector3(1,2,0) , vehicle.速度 , transform.position );
-		Gizmos.DrawCube ( transform.position  + 偏移量 , new Vector3(0.3f,0.3f,0.3f)  );
-
-
-		//在测试转化为局部坐标(也是正确的)
-		//Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
-
-		//绘制检测盒子
-		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
-		float 速度夹角  = Mathf.Atan2( vehicle.速度.y , vehicle.速度.x  );
-		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 检测盒长度 * Mathf.Cos( 速度夹角 )
-			, 检测盒长度 * Mathf.Sin( 速度夹角 ) , 0 ));
-
-
-		//绘制最近障碍物
-
-		if(需绘制最近障碍物!=null)
-		{
-			
-		}
-
-		//绘制obstacle avoid 力
-		Vector3 obstacleAvoid = ObstacleAvoidance();
-		Gizmos.DrawLine(transform.position, transform.position + new Vector3( obstacleAvoid.x , 0 , 0 ));
-		Gizmos.DrawLine(transform.position, transform.position + new Vector3( 0 , obstacleAvoid.y , 0 ));
-
-	}
 
 
 
