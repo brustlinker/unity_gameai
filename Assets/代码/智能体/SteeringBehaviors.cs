@@ -527,14 +527,9 @@ ObstacleAvoidance
 		//测试交点，
 		//当点击按钮的时候显示一个图片为交点
 
-		//实例化一个prefab，
-		//获取prefab的相对位置
-		//计算出prefab的绝对位置
-		//设置交点图片的位置
-
 
 		//在测试转化为局部坐标(也是正确的)
-		Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
+		//Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
 
 		//绘制检测盒子
 		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;

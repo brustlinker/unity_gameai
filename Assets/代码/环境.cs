@@ -89,17 +89,24 @@ public class 环境 : MonoBehaviour {
 		障碍物5.中心点 = new Vector3( -7 , 3 , 1 );
 		障碍物5.半径   = 2f ;
 		_障碍物_list.Add( 障碍物5 );
+
+
+		障碍物 障碍物6 = new 障碍物();
+		障碍物6.中心点 = new Vector3( 7 , 3 , 1 );
+		障碍物6.半径   = 2f ;
+		_障碍物_list.Add( 障碍物6 );
 	}
 
 
 
 	void OnDrawGizmos()
 	{
-		绘制圆形( new Vector3( 2 ,  1 , 1 ),   1 );
-		绘制圆形( new Vector3( 3 , -1 , 1 ),0.5f );
-		绘制圆形( new Vector3( -3 , -1, 1 ),1.5f );
-		绘制圆形( new Vector3( -3 , 3 , 1 ),0.5f );
-		绘制圆形( new Vector3( -7 , 3 , 1 ),  2f );
+		绘制圆形( new Vector3(  2 ,  1 , 1 ),   1 );
+		绘制圆形( new Vector3(  3 , -1 , 1 ),0.5f );
+		绘制圆形( new Vector3( -3 , -1 , 1 ),1.5f );
+		绘制圆形( new Vector3( -3 , 3  , 1 ),0.5f );
+		绘制圆形( new Vector3( -7 , 3  , 1 ),  2f );
+		绘制圆形( new Vector3(  7 , 3  , 1 ),  2f );
 	}
 
 
