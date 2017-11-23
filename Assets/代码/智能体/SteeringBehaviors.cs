@@ -51,6 +51,7 @@ public class SteeringBehaviors : MonoBehaviour
 
 
 	public bool 打开obstacleAvoid;
+	public bool 打开绘制ObstacleAvoid辅助线 = true;
 	public float obstacleAvoid权重;
 
 	public GameObject 交点预设;
@@ -342,10 +343,26 @@ ObstacleAvoidance
 
 		//记录 相交最近障碍物 被转化为局部坐标
 		Vector3 相交最近障碍物_局部坐标  = new Vector3( 最大float , 最大float , 0 ) ;
+
+		//如果绘制模式打开，绘制所有的障碍物
+		if( 打开绘制ObstacleAvoid辅助线 )
+		{
+			foreach (障碍物 障碍物 in 标记障碍物_list) {
+				//防止一个圆到障碍物的点中心
+				//GameObject 交点实例1 = Instantiate( 交点预设  , 障碍物.中心点 , Quaternion.identity);
+				//交点实例1.transform.SetParent( 障碍物.中心点 );
+			}
+			
+		}
+
+
 		foreach(障碍物 障碍物 in 标记障碍物_list)
 		{
 			//计算这个障碍物在局部发空间的位置
 			Vector3 LocalPos = PointToLocalSpace( 障碍物.中心点 , vehicle.速度 , transform.position );
+
+			//GameObject 交点实例1 = Instantiate( 交点预设  , LocalPos , Quaternion.identity);
+			//交点实例1.transform.SetParent( transform );
 
 			//局部坐标小雨0
 			if(LocalPos.x < 0)
@@ -396,28 +413,31 @@ ObstacleAvoidance
 
 		需绘制最近障碍物 = 相交最近障碍物;
 
-		if( 相交最近障碍物 != null )
-		{
+		if (相交最近障碍物 != null) {
 			交点实例.transform.position = 相交最近障碍物_局部坐标;
 			
 			//智能体离物体越近，操控里就越强
-			float multiplier = 1.0f + ( 检测盒长度 - 相交最近障碍物_局部坐标.x ) / 检测盒长度;
+			float multiplier = 1.0f + (检测盒长度 - 相交最近障碍物_局部坐标.x) / 检测盒长度;
 
 			//侧向力
-			操控力.y = ( 相交最近障碍物.半径 - 相交最近障碍物_局部坐标.y ) * multiplier;
+			操控力.y = (相交最近障碍物.半径 - 相交最近障碍物_局部坐标.y) * multiplier;
 
 
 			//制动力,正比喻障碍物到交通工具的距离
 			const float BrakingWeight = 0.2f;
 
-			操控力.x = ( 检测盒长度 - 相交最近障碍物_局部坐标.x ) * BrakingWeight;
+			操控力.x = (相交最近障碍物.半径 - 相交最近障碍物_局部坐标.x) * BrakingWeight;
 
 		}//if 相交最近障碍物
+
+		else {
+			交点实例.transform.position = transform.position;
+		}
 
 		//把操控向量从局部空间转化到世界空间
 
 
-		return VectorToWorldSpace( 操控力 , vehicle.速度 , transform.position );
+		return PointToWorldSpace( 操控力 , vehicle.速度 , transform.position );
 
 	}
 
@@ -470,7 +490,7 @@ ObstacleAvoidance
 	/// <param name="相对向量">相对向量.</param>
 	/// <param name="坐标向量">坐标向量.</param>
 	/// <param name="坐标向量起点">坐标向量起点.</param>
-	Vector3  VectorToWorldSpace( Vector3 相对向量 ,Vector3 坐标向量, Vector3 坐标向量起点 )
+	Vector3  PointToWorldSpace( Vector3 相对向量 ,Vector3 坐标向量, Vector3 坐标向量起点 )
 	{
 
 		//计算两个角的和
@@ -500,7 +520,7 @@ ObstacleAvoidance
 
 		//测试转化世界坐标函数
 		//转化世界坐标没有问题
-		Vector3 偏移量 = VectorToWorldSpace( new Vector3( -1 , -2 , 0 ) , vehicle.速度 , transform.position );
+		Vector3 偏移量 = PointToWorldSpace( new Vector3( -1 , -2 , 0 ) , vehicle.速度 , transform.position );
 		Gizmos.DrawCube ( transform.position  + 偏移量 , new Vector3(0.3f,0.3f,0.3f)  );
 
 
@@ -514,7 +534,7 @@ ObstacleAvoidance
 
 
 		//在测试转化为局部坐标(也是正确的)
-		//Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
+		Debug.Log( PointToLocalSpace( transform.position + 偏移量,vehicle.速度,vehicle.transform.position));
 
 		//绘制检测盒子
 		float 检测盒长度 = 最小检测盒长度 + (vehicle.速度.magnitude / vehicle.最大速度 ) * 最小检测盒长度;
