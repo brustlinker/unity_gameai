@@ -12,6 +12,8 @@ public class 障碍物
 
 public class 环境 : MonoBehaviour {
 
+
+	//障碍物
 	private List<障碍物> _障碍物_list;
 
 	public  List<障碍物> 障碍物_list
@@ -19,6 +21,18 @@ public class 环境 : MonoBehaviour {
 		get
 		{
 			return _障碍物_list;
+		}
+	}
+
+	//智能体
+
+	public Vehicle[] _vehicle_list;
+
+	public  Vehicle[] Vehicle_list
+	{
+		get
+		{
+			return _vehicle_list;
 		}
 	}
 
@@ -62,6 +76,13 @@ public class 环境 : MonoBehaviour {
 
 	void Start ()
 	{
+		添加几个障碍物();
+		添加几个MovingEntity();
+	}
+
+
+	void 添加几个障碍物()
+	{
 		_障碍物_list = new List<障碍物>();
 
 
@@ -98,15 +119,38 @@ public class 环境 : MonoBehaviour {
 	}
 
 
+	void 添加几个MovingEntity()
+	{
+		
+	}
+
+
+
+
+
+/*************************************************************************************************
+
+
+绘制辅助线层
+
+
+*************************************************************************************************/
+
+
+
+
+
 
 	void OnDrawGizmos()
 	{
+		/*
 		绘制圆形( new Vector3(  2 ,  1 , 1 ),   1 );
 		绘制圆形( new Vector3(  3 , -1 , 1 ),0.5f );
 		绘制圆形( new Vector3( -3 , -1 , 1 ),1.5f );
 		绘制圆形( new Vector3( -3 , 3  , 1 ),0.5f );
 		绘制圆形( new Vector3( -7 , 3  , 1 ),  2f );
 		绘制圆形( new Vector3(  7 , 3  , 1 ),  2f );
+		*/
 	}
 
 

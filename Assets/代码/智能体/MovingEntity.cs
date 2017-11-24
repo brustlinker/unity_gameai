@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingEntity : MonoBehaviour 
+public class MovingEntity : MonoBehaviour
 {
 
 	protected Vector3  _速度;
@@ -23,6 +23,9 @@ public class MovingEntity : MonoBehaviour
 
 	//最大转向速率（弧度每秒）
 	protected float    _最大转向速度;
+
+	//是否被标记
+	private   bool     _tag;
 
 
 	public Vector3 速度
@@ -109,6 +112,29 @@ public class MovingEntity : MonoBehaviour
 		}
 	}
 
+	public bool Tag
+	{
+		get
+		{
+			return _tag;
+		}
+		set
+		{
+			_tag = value;
+		}
+	}
+
+
+
+	public void TagIt()
+	{
+		_tag = true;
+	}
+
+	public void UnTag()
+	{
+		_tag = false;
+	}
 
 
 }

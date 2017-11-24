@@ -55,8 +55,13 @@ public class SteeringBehaviors : MonoBehaviour
 	public float obstacleAvoid权重;
 
 	public GameObject 交点预设;
-	private GameObject 交点实例;
 
+
+	//Separation
+	public bool    打开separation;
+	public float   separation权重;
+	public float   标记半径;
+	public bool    打开绘制Separation辅助线;
 
 
 
@@ -70,8 +75,6 @@ public class SteeringBehaviors : MonoBehaviour
 		vehicle = this.GetComponent<Vehicle>();
 		InvokeRepeating("更新wanderForce" , 0 , 0.5f );
 
-		交点实例 = Instantiate( 交点预设  , transform.position,Quaternion.identity);
-		交点实例.transform.SetParent( this.transform );
     }
 
 	public Vector3 计算合力()
@@ -97,6 +100,12 @@ public class SteeringBehaviors : MonoBehaviour
 		if ( 打开obstacleAvoid )
 		{
 			force += ObstacleAvoidance( ) * obstacleAvoid权重;
+		}
+		if( 打开separation )
+		{
+			//List<Vehicle> 邻居们 = 
+			标记邻居智能体(4);
+			force += Separation( ) * separation权重;
 		}
 
 		return force;
@@ -352,7 +361,7 @@ ObstacleAvoidance
 				//GameObject 交点实例1 = Instantiate( 交点预设  , 障碍物.中心点 , Quaternion.identity);
 				//交点实例1.transform.SetParent( 障碍物.中心点 );
 			}
-			
+
 		}
 
 
@@ -414,8 +423,7 @@ ObstacleAvoidance
 		需绘制最近障碍物 = 相交最近障碍物;
 
 		if (相交最近障碍物 != null) {
-			交点实例.transform.position = 相交最近障碍物_局部坐标;
-			
+
 			//智能体离物体越近，操控里就越强
 			float multiplier = 1.0f + (检测盒长度 - 相交最近障碍物_局部坐标.x) / 检测盒长度;
 
@@ -430,9 +438,7 @@ ObstacleAvoidance
 
 		}//if 相交最近障碍物
 
-		else {
-			交点实例.transform.position = transform.position;
-		}
+
 
 		//把操控向量从局部空间转化到世界空间
 
@@ -517,6 +523,11 @@ ObstacleAvoidance
 		if( vehicle ==null )
 			return;
 
+		if(! 打开绘制ObstacleAvoid辅助线 )
+		{
+			return;
+		}
+
 
 		//测试转化世界坐标函数
 		//转化世界坐标没有问题
@@ -556,6 +567,85 @@ ObstacleAvoidance
 
 
 
+
+
+/*************************************************************************************************
+
+
+TagNeighhors
+
+
+*************************************************************************************************/
+
+	void 标记邻居智能体( float 标记半径)
+	{
+		Vehicle[] vehicle_list = 环境.实例.Vehicle_list;
+		foreach(Vehicle 智能体 in vehicle_list)
+		{
+			智能体.UnTag();
+
+			Vector3 to = 智能体.transform.position - transform.position;
+
+			//暂时不考虑其包围半径，把它加到范围
+			float range = 标记半径;
+
+			if( 智能体 != this && to.magnitude < range )
+			{
+				智能体.TagIt();
+			}
+
+		}
+	}
+
+
+/*************************************************************************************************
+
+
+	Separation
+
+
+*************************************************************************************************/
+
+	Vector3 Separation( )
+	{
+		Vector3 操控力 = Vector3.zero;
+		Vehicle[] vehicle_list = 环境.实例.Vehicle_list;
+
+		foreach(Vehicle 邻居 in vehicle_list)
+		{
+			//是否是自己需要更改
+			if( 邻居 != vehicle  && 邻居.Tag )
+			{
+				Vector3 to = vehicle.transform.position - 邻居.transform.position;
+
+				//力的大小反比于智能体到它邻居的距离
+				操控力 += to.normalized / to.magnitude;
+			}
+		}//下一个邻居
+
+		return 操控力;
+	}
+
+	void 绘制Separation辅助线()
+	{
+		if(!打开绘制Separation辅助线)
+		{
+			return;
+		}
+
+		//关闭烦人的警告
+		if( vehicle == null )
+		{
+			return;
+		}
+
+
+		Vector3 separationForce = Separation();
+		Gizmos.DrawLine( transform.position, transform.position + separationForce );
+
+
+	}
+
 /*************************************************************************************************
 
 
@@ -570,6 +660,7 @@ Gizmos 层
 	{
 		绘制wander辅助线();
 		绘制ObstaclAvoid辅助线();
+		绘制Separation辅助线();
 	}
 
 
