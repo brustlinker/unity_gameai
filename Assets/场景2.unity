@@ -250,6 +250,7 @@ MonoBehaviour:
   "\u6253\u5F00evade": 0
   "evade\u6743\u91CD": 0
   "evade\u76EE\u6807": {fileID: 0}
+  "\u6050\u60E7\u8DDD\u79BB": 2
   "wander\u534A\u5F84": 4
   "wander\u8DDD\u79BB": 1
   wanderJitter: 0.3
@@ -259,15 +260,20 @@ MonoBehaviour:
   "\u6253\u5F00\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 2
   "\u6253\u5F00obstacleAvoid": 0
-  "\u6253\u5F00\u7ED8\u5236ObstacleAvoid\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00\u7ED8\u5236obstacleAvoid\u8F85\u52A9\u7EBF": 0
   "obstacleAvoid\u6743\u91CD": 1
   "\u4EA4\u70B9\u9884\u8BBE": {fileID: 1240865434908124, guid: f0245cdcc6a6a4f129370c517c7562ac,
     type: 2}
-  "\u6253\u5F00separation": 1
+  "\u7FA4\u805A\u534A\u5F84": 5
+  "\u6253\u5F00separation": 0
   "separation\u6743\u91CD": 1
-  "\u6807\u8BB0\u534A\u5F84": 6
-  "\u6253\u5F00\u7ED8\u5236Separation\u8F85\u52A9\u7EBF": 1
-  "\u6050\u60E7\u8DDD\u79BB": 2
+  "\u6253\u5F00\u7ED8\u5236separation\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00alignment": 0
+  "alignment\u6743\u91CD": 1
+  "\u6253\u5F00\u7ED8\u5236alignment\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00cohesion": 1
+  "cohesion\u6743\u91CD": 1
+  "\u6253\u5F00\u7ED8\u5236cohesion\u8F85\u52A9\u7EBF": 0
 --- !u!114 &998534231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,6 +450,7 @@ MonoBehaviour:
   "\u6253\u5F00evade": 0
   "evade\u6743\u91CD": 0
   "evade\u76EE\u6807": {fileID: 0}
+  "\u6050\u60E7\u8DDD\u79BB": 2
   "wander\u534A\u5F84": 4
   "wander\u8DDD\u79BB": 1
   wanderJitter: 0.3
@@ -453,15 +460,20 @@ MonoBehaviour:
   "\u6253\u5F00\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 2
   "\u6253\u5F00obstacleAvoid": 0
-  "\u6253\u5F00\u7ED8\u5236ObstacleAvoid\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00\u7ED8\u5236obstacleAvoid\u8F85\u52A9\u7EBF": 0
   "obstacleAvoid\u6743\u91CD": 1
   "\u4EA4\u70B9\u9884\u8BBE": {fileID: 1240865434908124, guid: f0245cdcc6a6a4f129370c517c7562ac,
     type: 2}
-  "\u6253\u5F00separation": 1
+  "\u7FA4\u805A\u534A\u5F84": 7
+  "\u6253\u5F00separation": 0
   "separation\u6743\u91CD": 1
-  "\u6807\u8BB0\u534A\u5F84": 10
-  "\u6253\u5F00\u7ED8\u5236Separation\u8F85\u52A9\u7EBF": 1
-  "\u6050\u60E7\u8DDD\u79BB": 2
+  "\u6253\u5F00\u7ED8\u5236separation\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00alignment": 0
+  "alignment\u6743\u91CD": 1
+  "\u6253\u5F00\u7ED8\u5236alignment\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00cohesion": 1
+  "cohesion\u6743\u91CD": 1
+  "\u6253\u5F00\u7ED8\u5236cohesion\u8F85\u52A9\u7EBF": 0
 --- !u!1 &1443401316
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,6 +568,7 @@ MonoBehaviour:
   "\u6253\u5F00evade": 0
   "evade\u6743\u91CD": 0
   "evade\u76EE\u6807": {fileID: 0}
+  "\u6050\u60E7\u8DDD\u79BB": 2
   "wander\u534A\u5F84": 4
   "wander\u8DDD\u79BB": 1
   wanderJitter: 0.3
@@ -565,15 +578,20 @@ MonoBehaviour:
   "\u6253\u5F00\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 2
   "\u6253\u5F00obstacleAvoid": 0
-  "\u6253\u5F00\u7ED8\u5236ObstacleAvoid\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00\u7ED8\u5236obstacleAvoid\u8F85\u52A9\u7EBF": 0
   "obstacleAvoid\u6743\u91CD": 1
   "\u4EA4\u70B9\u9884\u8BBE": {fileID: 1240865434908124, guid: f0245cdcc6a6a4f129370c517c7562ac,
     type: 2}
+  "\u7FA4\u805A\u534A\u5F84": 7
   "\u6253\u5F00separation": 1
   "separation\u6743\u91CD": 1
-  "\u6807\u8BB0\u534A\u5F84": 8
-  "\u6253\u5F00\u7ED8\u5236Separation\u8F85\u52A9\u7EBF": 1
-  "\u6050\u60E7\u8DDD\u79BB": 2
+  "\u6253\u5F00\u7ED8\u5236separation\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00alignment": 0
+  "alignment\u6743\u91CD": 0
+  "\u6253\u5F00\u7ED8\u5236alignment\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00cohesion": 1
+  "cohesion\u6743\u91CD": 1
+  "\u6253\u5F00\u7ED8\u5236cohesion\u8F85\u52A9\u7EBF": 0
 --- !u!212 &1505057942
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -715,6 +733,7 @@ MonoBehaviour:
   "\u6253\u5F00evade": 1
   "evade\u6743\u91CD": 1
   "evade\u76EE\u6807": {fileID: 1210542552}
+  "\u6050\u60E7\u8DDD\u79BB": 2
   "wander\u534A\u5F84": 0
   "wander\u8DDD\u79BB": 0
   wanderJitter: 0
@@ -724,14 +743,19 @@ MonoBehaviour:
   "\u6253\u5F00\u7ED8\u5236wander\u8F85\u52A9\u7EBF": 0
   "\u6700\u5C0F\u68C0\u6D4B\u76D2\u957F\u5EA6": 0.01
   "\u6253\u5F00obstacleAvoid": 0
-  "\u6253\u5F00\u7ED8\u5236ObstacleAvoid\u8F85\u52A9\u7EBF": 1
+  "\u6253\u5F00\u7ED8\u5236obstacleAvoid\u8F85\u52A9\u7EBF": 0
   "obstacleAvoid\u6743\u91CD": 0
   "\u4EA4\u70B9\u9884\u8BBE": {fileID: 0}
+  "\u7FA4\u805A\u534A\u5F84": 0
   "\u6253\u5F00separation": 0
   "separation\u6743\u91CD": 0
-  "\u6807\u8BB0\u534A\u5F84": 0
-  "\u6253\u5F00\u7ED8\u5236Separation\u8F85\u52A9\u7EBF": 0
-  "\u6050\u60E7\u8DDD\u79BB": 2
+  "\u6253\u5F00\u7ED8\u5236separation\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00alignment": 0
+  "alignment\u6743\u91CD": 0
+  "\u6253\u5F00\u7ED8\u5236alignment\u8F85\u52A9\u7EBF": 0
+  "\u6253\u5F00cohesion": 0
+  "cohesion\u6743\u91CD": 0
+  "\u6253\u5F00\u7ED8\u5236cohesion\u8F85\u52A9\u7EBF": 0
 --- !u!114 &2070461299
 MonoBehaviour:
   m_ObjectHideFlags: 0

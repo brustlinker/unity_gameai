@@ -28,6 +28,7 @@ public class SteeringBehaviors : MonoBehaviour
 	public bool 打开evade;
 	public float evade权重;
 	public Vehicle evade目标;
+	public float 恐惧距离=2f;
 
 	//wander
 	//wander圈的半径
@@ -51,21 +52,32 @@ public class SteeringBehaviors : MonoBehaviour
 
 
 	public bool 打开obstacleAvoid;
-	public bool 打开绘制ObstacleAvoid辅助线 = true;
+	public bool 打开绘制obstacleAvoid辅助线;
 	public float obstacleAvoid权重;
 
 	public GameObject 交点预设;
 
 
+	//群聚行为
+	public float  群聚半径;
 	//Separation
 	public bool    打开separation;
 	public float   separation权重;
-	public float   标记半径;
-	public bool    打开绘制Separation辅助线;
+	public bool    打开绘制separation辅助线;
 
 
+	//Alignment
+	public bool    打开alignment;
+	public float   alignment权重;
+	public bool    打开绘制alignment辅助线;
 
-	public float 恐惧距离=2f;
+
+	//Cohesion
+	public bool    打开cohesion;
+	public float   cohesion权重;
+	public bool    打开绘制cohesion辅助线;
+
+
 
 
 
@@ -101,13 +113,24 @@ public class SteeringBehaviors : MonoBehaviour
 		{
 			force += ObstacleAvoidance( ) * obstacleAvoid权重;
 		}
+		if( 打开separation || 打开alignment)
+		{
+			
+			标记邻居智能体(  );
+		}
 		if( 打开separation )
 		{
-			//List<Vehicle> 邻居们 = 
-			标记邻居智能体(4);
+
 			force += Separation( ) * separation权重;
 		}
-
+		if( 打开alignment )
+		{
+			force += Alignment( ) * alignment权重;
+		}
+		if( 打开cohesion )
+		{
+			force += Cohesion( ) * cohesion权重;
+		}
 		return force;
 	}
 
@@ -354,7 +377,7 @@ ObstacleAvoidance
 		Vector3 相交最近障碍物_局部坐标  = new Vector3( 最大float , 最大float , 0 ) ;
 
 		//如果绘制模式打开，绘制所有的障碍物
-		if( 打开绘制ObstacleAvoid辅助线 )
+		if( 打开绘制obstacleAvoid辅助线 )
 		{
 			foreach (障碍物 障碍物 in 标记障碍物_list) {
 				//防止一个圆到障碍物的点中心
@@ -523,7 +546,7 @@ ObstacleAvoidance
 		if( vehicle ==null )
 			return;
 
-		if(! 打开绘制ObstacleAvoid辅助线 )
+		if(! 打开绘制obstacleAvoid辅助线 )
 		{
 			return;
 		}
@@ -577,7 +600,7 @@ TagNeighhors
 
 *************************************************************************************************/
 
-	void 标记邻居智能体( float 标记半径)
+	void 标记邻居智能体(  )
 	{
 		Vehicle[] vehicle_list = 环境.实例.Vehicle_list;
 		foreach(Vehicle 智能体 in vehicle_list)
@@ -587,7 +610,7 @@ TagNeighhors
 			Vector3 to = 智能体.transform.position - transform.position;
 
 			//暂时不考虑其包围半径，把它加到范围
-			float range = 标记半径;
+			float range = 群聚半径;
 
 			if( 智能体 != this && to.magnitude < range )
 			{
@@ -628,7 +651,7 @@ TagNeighhors
 
 	void 绘制Separation辅助线()
 	{
-		if(!打开绘制Separation辅助线)
+		if(!打开绘制separation辅助线)
 		{
 			return;
 		}
@@ -646,6 +669,104 @@ TagNeighhors
 
 	}
 
+
+/*************************************************************************************************
+
+
+	Alignment
+
+
+*************************************************************************************************/
+
+	Vector3 Alignment( )
+	{
+		Vector3 平均朝向 = Vector3.zero;
+
+		int 邻居数量 = 0;
+
+		Vehicle[] vehicle_list = 环境.实例.Vehicle_list;
+
+		foreach(Vehicle 邻居 in vehicle_list)
+		{
+			//是否是自己需要更改
+			if( 邻居 != vehicle  && 邻居.Tag )
+			{
+				平均朝向 += 邻居.速度;
+				邻居数量++;
+			}
+		}//下一个邻居
+
+		if( 邻居数量 > 0 )
+		{
+			平均朝向 /=(float) 邻居数量;
+			平均朝向 -= vehicle.速度;
+		}
+			
+
+		return 平均朝向;
+	}
+
+
+/*************************************************************************************************
+
+
+	Cohesion
+
+
+*************************************************************************************************/
+
+	Vector3 Cohesion( )
+	{
+		Vector3 操控力 = Vector3.zero;
+		Vector3 所有智能体的质心 = Vector3.zero;
+
+		int 邻居数量 = 0;
+
+		Vehicle[] vehicle_list = 环境.实例.Vehicle_list;
+
+		foreach(Vehicle 邻居 in vehicle_list)
+		{
+			//是否是自己需要更改
+			if( 邻居 != vehicle  && 邻居.Tag )
+			{
+				所有智能体的质心 += 邻居.transform.position;
+				邻居数量++;
+			}
+		}//下一个邻居
+
+		if( 邻居数量 > 0 )
+		{
+			所有智能体的质心 /=(float) 邻居数量;
+			操控力 = Seek( 所有智能体的质心 );
+		}
+
+
+		return 操控力;
+	}
+
+
+
+	void 绘制Alignment辅助线()
+	{
+		if(!打开绘制alignment辅助线)
+		{
+			return;
+		}
+
+		//关闭烦人的警告
+		if( vehicle == null )
+		{
+			return;
+		}
+
+
+		Vector3 alignmentForce = Alignment();
+		Gizmos.DrawLine( transform.position, transform.position + alignmentForce );
+
+
+	}
+
+
 /*************************************************************************************************
 
 
@@ -661,6 +782,7 @@ Gizmos 层
 		绘制wander辅助线();
 		绘制ObstaclAvoid辅助线();
 		绘制Separation辅助线();
+		绘制Alignment辅助线();
 	}
 
 
